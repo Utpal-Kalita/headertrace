@@ -112,7 +112,7 @@
         id: "from-returnpath-mismatch",
         severity: "moderate",
         title: "From and Return-Path domains differ",
-        detail: "Replies would go to " + fromDom + " but bounces go to " + rpDom + ". This is normal for mailing lists and some providers, and it is also how simple spoofs look. The headers alone cannot say which.",
+        detail: "The visible sender is " + fromDom + " but the envelope return address (where bounces and delivery errors go) is " + rpDom + ". This is normal for mailing lists and some providers, and it is also how simple spoofs look. The headers alone cannot say which. (Where replies go depends on any Reply-To header - checked separately.)",
         cites: ["From: " + fromV, "Return-Path: " + returnPath]
       });
     }
@@ -152,9 +152,9 @@
       if (inversions > 0) {
         signals.push({
           id: "received-time-inversion",
-          severity: "strong",
+          severity: inversions >= 2 ? "strong" : "moderate",
           title: "Received hops run backwards in time",
-          detail: inversions + " hop(s) carry timestamps earlier than the hop below them. Genuine relays do not move mail backwards in time; pasted or injected hop lines often do.",
+          detail: inversions + " hop(s) carry timestamps earlier than the hop below them. That can come from pasted or injected hop lines - and also from ordinary clock skew between servers, which is common. Worth a look, not proof of tampering.",
           cites: receivedHs.map((h) => h.raw.join("\n").slice(0, 200))
         });
       }
