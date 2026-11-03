@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HeaderTrace - what do these email headers actually claim?</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <h1>HeaderTrace</h1>
+    <p class="tag">Paste the full headers of a suspicious email. HeaderTrace lays out
+    <em>what the headers claim</em>, in plain language, and checks whether the claims are
+    consistent with each other - citing the exact lines behind every observation.
+    Nothing is uploaded; the analysis runs entirely in this page.</p>
+  </header>
+
+  <section class="input-area">
+    <textarea id="src" rows="12" spellcheck="false"
+      placeholder="Paste full raw headers here (in most mail apps: 'Show original' or 'View message source'). Nothing leaves this page."></textarea>
+    <div class="row">
+      <button id="go">Analyze</button>
+      <button id="sample" class="ghost">Load a suspicious-looking sample</button>
+      <button id="clear" class="ghost">Clear</button>
+    </div>
+  </section>
+
+  <section id="results" hidden>
+    <section class="card">
+      <h2>What this paste claims</h2>
+      <dl id="claims"></dl>
+    </section>
+
+    <section class="card">
+      <h2>Delivery chain <span class="sub">newest hop first</span></h2>
+      <ol id="hops" class="hops"></ol>
+      <p id="nohops" class="muted" hidden>No Received headers in this paste.</p>
+    </section>
+
+    <section class="card asserted">
+      <h2>Authentication, as asserted</h2>
+      <p class="caveat">Authentication-Results is written by a receiving server about its own
+      checks. A forged paste can contain a fake one. HeaderTrace shows what it says -
+      it <strong>cannot confirm or refute it</strong> from pasted text. A DKIM signature
+      cannot be recomputed here either: that needs the message's exact original bytes and
+      a live DNS lookup.</p>
+      <div id="auth"></div>
+      <div id="dkim"></div>
+    </section>
+
+    <section class="card">
+      <h2>Consistency signals</h2>
+      <p class="muted">Internal-consistency observations, not a verdict. Each cites the exact
+      lines it comes from.</p>
+      <div id="signals"></div>
+      <p id="nosignals" class="ok" hidden>No inconsistencies found among these claims.
+      That is not proof the email is genuine - a careful forgery can be internally consistent.</p>
+    </section>
+  </section>
+
+  <footer>
+    <p><strong>Honest limits.</strong> Pasted headers are untrusted input: any line can be
+    forged before you paste it. HeaderTrace never verifies, never scores, and never says
+    "safe". It shows claims, checks them against each other, and cites its lines.
+    When in doubt, verify with the organization through a channel you already trust -
+    never through links or numbers in the email itself.</p>
+  </footer>
+</main>
+<script src="parser.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
